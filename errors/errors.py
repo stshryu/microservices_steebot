@@ -7,10 +7,11 @@ class BaseError(Exception):
 
 
 class InvalidInputs(BaseError):
-    """Raised when the inputs are incorrect
+    """
+    Raised when the inputs are incorrect
 
-    Attributes:
-        input_var   -- input name which caused the error
+    Parameters:
+        input_var   -- list of input names which caused an error
         message     -- message sent back with exception
     """
 
@@ -24,12 +25,12 @@ class InvalidInputs(BaseError):
                 .format(', '.join(self.input_var), message)
 
 
-class MissingInput(BaseError):
+class MissingInputs(BaseError):
     """
     Raised when expected inputs are missing
 
-    Attributes:
-        expected_inputs   -- list of inputs missing
+    Parameters:
+        expected_inputs     -- list of inputs missing
         message             -- message sent back with exception
     """
 
@@ -41,3 +42,15 @@ class MissingInput(BaseError):
         else:
             self.message = "Error, missing input value(S): {}. Error message: {}"\
                 .format(', '.join(self.expected_inputs), message)
+
+
+class UnexpectedError(BaseError):
+    """
+    Raised when an unexpected (uncaught) error is processed
+
+    Attributes:
+        message     -- message sent back with exception
+    """
+
+    def __init__(self, message="Unexpected error"):
+        self.message = message
