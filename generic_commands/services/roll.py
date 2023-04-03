@@ -29,7 +29,9 @@ class Roll(object):
 
             errors.MissingInputs -          When one or more expected inputs are missing
 
-            success.Success(object: Roll) - When successful in rolling return self
+            errors.UnexpectedError -        When none of the success/error cases match an expected outcome
+
+            success.Success(object: Roll) - When successful in rolling, return self
         """
         non_validated_data = request.POST
         result = self.validate(non_validated_data)
