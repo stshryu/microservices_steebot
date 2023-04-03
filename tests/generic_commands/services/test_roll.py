@@ -1,9 +1,9 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
 
 from generic_commands.services import roll
 from errors import errors
 import success
+from tests import test_helper
 
 
 class TestRoll(TestCase):
@@ -13,7 +13,7 @@ class TestRoll(TestCase):
             'lower_bound': 10,
             'upper_bound': 100
         }
-        request = self.api_factory_helper('post', input_data)
+        request = test_helper.api_factory_helper('post', input_data)
 
         # Act
         value = roll.Roll()
@@ -32,7 +32,7 @@ class TestRoll(TestCase):
             'lower_bound': 100,
             'upper_bound': 10
         }
-        request = self.api_factory_helper('post', input_data)
+        request = test_helper.api_factory_helper('post', input_data)
 
         # Act
         value = roll.Roll()
@@ -41,11 +41,3 @@ class TestRoll(TestCase):
         # Assert
         self.assertIsInstance(result, errors.InvalidInputs)
 
-    @staticmethod
-    def api_factory_helper(request_type: str, request_data: dict):
-        factory = APIRequestFactory()
-        if request_type == 'post':
-            request = factory.post('', request_data)
-        elif request_type == 'get':
-            request = factory.get('')
-        return request

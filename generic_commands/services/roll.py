@@ -41,6 +41,8 @@ class Roll(object):
             case success.Success():
                 self.unpack_valid_data(result)
                 return success.Success(self)
+            case _:
+                return errors.UnexpectedError()
 
     def validate(self, non_validated_data):
         """
