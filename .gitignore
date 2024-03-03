@@ -212,3 +212,9 @@ fabric.properties
 
 # db
 *.sqlite3
+
+# node modules
+node_modules
+
+# vim
+*.swp
