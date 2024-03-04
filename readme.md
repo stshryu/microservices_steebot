@@ -10,6 +10,6 @@ In the future, there will be an option to selectively spin up services to make t
 
 ## Project Layout
 
-`client/` contains the frontend.
+`client/` contains the frontend built in React.
 
-`server/` contains the backend services.
+`server/` contains the backend services built using FastAPI.

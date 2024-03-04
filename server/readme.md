@@ -1,5 +1,7 @@
 # Discord API Wrapper
 
-This Flask server is designed to communicate with the discord wrapper to provide a layer of abstraction to the other services that might want to use it.
+This is going to be the base API server we used to communicate with the wrapper as well as handle auth and database transactions.
 
-Also is a base-hub for API requests from the client frontend.
+Written using FastAPI, there was some considerations into using Flask or Django, however the use case we want is extremely performant, small and scalable server, which means we don't need any extra goodies like Jinja or HTML templating responses from Flask/Django.
+
+
