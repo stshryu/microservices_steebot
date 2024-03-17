@@ -1,12 +1,13 @@
 version: '3'
 
 services:
-  backend:
-    container_name: server
+  toxic_ticket:
+    container_name: toxic_ticket
     build:
-      context: ./server
+      context: ./toxic_ticket
       dockerfile: Dockerfile
     image: server
+    profiles: ["toxicticket"]
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
@@ -14,9 +15,10 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./server:/app
+      - ./toxic_ticket:/app
     depends_on:
       - mongodb
+      - redis
 
   mongodb:
     container_name: mongodb
@@ -26,7 +28,6 @@ services:
 
   redis:
     image: redis
-    profiles: ["messaging"]
     ports:
       - "6379:6379"
 
@@ -42,5 +43,3 @@ services:
     volumes:
       - ./client:/app
       - /app/node_modules
-    depends_on:
-      - backend
