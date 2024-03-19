@@ -7,7 +7,7 @@ services:
       context: ./toxic_ticket
       dockerfile: Dockerfile
     image: server
-    profiles: ["toxicticket"]
+    profiles: ["toxicticket", "dev"]
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
@@ -36,7 +36,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    profiles: ["frontend"]
+    profiles: ["frontend", "dev"]
     image: react
     ports:
       - "3000:3000"
