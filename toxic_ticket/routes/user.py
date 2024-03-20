@@ -120,7 +120,7 @@ async def remove_toxic_ticket(id: PydanticObjectId, is_ttadmin: Annotated[bool, 
         return {
             "status_code": 401,
             "response_type": "error",
-            "description": "Only an admin can remove a toxic ticket"
+            "description": "Only an admin can remove a toxic ticket",
             "data": False,
         }
     return {
