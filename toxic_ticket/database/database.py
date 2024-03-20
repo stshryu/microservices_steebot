@@ -6,6 +6,12 @@ from models.user import User
 admin_collection = Admin
 user_collection = User
 
+async def get_tt_admin(admin_username: str) -> bool:
+    admin_exists = await Admin.find_one(Admin.username == admin_username)
+    if admin_exists:
+        return True
+    return False
+
 async def add_admin(new_admin: Admin) -> Admin:
     admin = await new_admin.create()
     return admin

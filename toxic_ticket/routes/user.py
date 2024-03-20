@@ -1,9 +1,19 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
+from typing import Annotated
 from database.database import *
 from models.user import User
 from schemas.user import Response, UpdateUserModel
 
 router = APIRouter()
+
+async def get_admin() -> bool:
+    return False 
+
+async def get_ttadmin(username: str) -> bool:
+    admin_exists = await get_ttadmin(username)
+    if admin_exists:
+        return True
+    return False
 
 @router.get("/", response_description="Users retrieved", response_model=Response)
 async def get_users():
@@ -48,14 +58,21 @@ async def add_user_data(user: User = Body(...)):
 
 
 @router.delete("/{id}", response_description="User data deleted from the database")
-async def delete_user_data(id: PydanticObjectId):
-    deleted_user = await delete_user(id)
+async def delete_user_data(id: PydanticObjectId, is_admin: Annotated[bool, Depends(get_admin)]):
+    deleted_user = await delete_user(id) if is_admin else False 
     if deleted_user:
         return {
             "status_code": 200,
             "response_type": "success",
             "description": "User with ID: {} removed".format(id),
             "data": deleted_user,
+        }
+    else:
+        return {
+            "status_code": 401,
+            "response_type": "error",
+            "description": f"Users can only be removed by an admin",
+            "data": False,
         }
     return {
         "status_code": 404,
@@ -66,14 +83,21 @@ async def delete_user_data(id: PydanticObjectId):
 
 
 @router.post("/{id}/add_tt", response_model=Response)
-async def add_toxic_ticket(id: PydanticObjectId):
-    updated_user = await add_toxic_ticket(id) 
+async def add_toxic_ticket(id: PydanticObjectId, is_ttadmin: Annotated[bool, Depends(get_ttadmin)]):
+    updated_user = await add_toxic_ticket(id) if is_ttadmin else False
     if updated_user:
         return {
             "status_code": 200,
             "response_type": "success",
             "description": "User with ID: {} updated".format(id),
             "data": updated_user,
+        }
+    else:
+        return {
+            "status_code": 401,
+            "response_type": "error",
+            "description": "Only an admin can add a toxic ticket",
+            "data": False,
         }
     return {
         "status_code": 404,
@@ -83,14 +107,21 @@ async def add_toxic_ticket(id: PydanticObjectId):
     }
 
 @router.post("/{id}/remove_tt", response_model=Response)
-async def remove_toxic_ticket(id: PydanticObjectId):
-    updated_user = await remove_toxic_ticket(id) 
+async def remove_toxic_ticket(id: PydanticObjectId, is_ttadmin: Annotated[bool, Depends(get_ttadmin)]):
+    updated_user = await remove_toxic_ticket(id) if is_ttadmin else False
     if updated_user:
         return {
             "status_code": 200,
             "response_type": "success",
             "description": "User with ID: {} updated".format(id),
             "data": updated_user,
+        }
+    else:
+        return {
+            "status_code": 401,
+            "response_type": "error",
+            "description": "Only an admin can remove a toxic ticket"
+            "data": False,
         }
     return {
         "status_code": 404,
