@@ -10,10 +10,7 @@ async def get_admin() -> bool:
     return False 
 
 async def get_ttadmin(username: str) -> bool:
-    admin_exists = await get_ttadmin(username)
-    if admin_exists:
-        return True
-    return False
+    return await get_ttadmin(username)
 
 @router.get("/", response_description="Users retrieved", response_model=Response)
 async def get_users():
