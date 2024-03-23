@@ -3,6 +3,7 @@ from typing import Annotated
 from database.database import *
 from models.user import User
 from schemas.user import Response, UpdateUserModel
+from config.config import get_redis_connection
 
 router = APIRouter()
 
@@ -11,6 +12,16 @@ async def get_admin() -> bool:
 
 async def get_ttadmin(username: str) -> bool:
     return await get_ttadmin(username)
+
+""" 
+An example redis usage template:
+    ...
+client = await get_redis_connection()
+await client.set(1, "hello")
+print(f"Redis key: {await client.get(1)}")
+await client.close()
+    ...
+"""
 
 @router.get("/", response_description="Users retrieved", response_model=Response)
 async def get_users():
