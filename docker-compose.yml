@@ -6,8 +6,27 @@ services:
     build:
       context: ./toxic_ticket
       dockerfile: Dockerfile
-    image: server
-    profiles: ["toxicticket", "dev"]
+    image: toxic_ticket 
+    profiles: ["backend", "toxicticket", "dev"]
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      DB_NAME: default
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./toxic_ticket:/app
+    depends_on:
+      - mongodb
+      - redis
+
+  discord_wrapper:
+    container_name: discord_wrapper
+    build:
+      context: ./discord_wrapper
+      dockerfile: Dockerfile
+    image: discord_wrapper
+    profiles: ["backend", "discordwrapper", "dev"]
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
@@ -15,7 +34,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./toxic_ticket:/app
+      - ./discord_wrapper:/app
     depends_on:
       - mongodb
       - redis

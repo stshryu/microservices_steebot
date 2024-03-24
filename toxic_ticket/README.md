@@ -1,9 +1,15 @@
 # Basic User and Toxic Ticket functionality
 
-Stores a user, and their toxic ticket count.
+FastAPI server designed to ingest jobs from a redis queue to `add`, `remove` and `view` toxic tickets that have been assigned to a user.
 
-## TODO 
+## Functionality
 
-Eventually, we want this server to standalone for users and toxic tickets.
+Runs on port `5001`.
 
-We want to add: Toxic Ticketed Events, to allow for reasons for ticket issuance as well as tying the issuing officer and the perpretrator to the model object.
+Currently will ingest jobs from the redis queue and execute them.
+
+Contains methods for a `user` object that stores the username, email and toxic ticket count.
+
+## API 
+
+The toxic ticket API endpoint can be reached directly, if you have the proper credentials that wraps the endpoints. There's no auth on admin or user currently so its a moot point, but when it is added it should only allow interfacing through the queue.

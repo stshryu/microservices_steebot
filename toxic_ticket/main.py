@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends
-import redis
 from config.config import initiate_database
 from routes.admin import router as AdminRouter
 from routes.user import router as UserRouter 
