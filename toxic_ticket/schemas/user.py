@@ -5,7 +5,9 @@ class UpdateUserModel(BaseModel):
     username: Optional[str]
     email: Optional[EmailStr]
     discord_id: Optional[str]
+    mini_toxic_tickets: Optional[int]
     toxic_tickets: Optional[int]
+    pma_stickers: Optional[int]
 
     class Collection:
         name = "user"
@@ -16,7 +18,9 @@ class UpdateUserModel(BaseModel):
                 "username": "JorgEl",
                 "email": "test@gmail.com",
                 "discord_id": "abc123",
+                "mini_toxic_tickets": 1,
                 "toxic_tickets": 9128,
+                "pma_stickers": 2,
             }
         }
 

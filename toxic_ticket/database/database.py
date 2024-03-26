@@ -37,31 +37,31 @@ async def delete_user(id: PydanticObjectId) -> bool:
 async def add_toxic_ticket(id) -> Union[bool, User]: 
     user = await user_collection.get(id)
     if user:
-        user.toxic_ticket += 1 
+        user.toxic_tickets += 1 
         await user.save()
         return user 
-    return False
-
-async def remove_toxic_ticket(id) -> Union[bool, User]:
-    user = await user_collection.get(id)
-    if user:
-        user.toxic_ticket -= 1
-        await user.save()
-        return user
     return False
 
 async def add_bulk_toxic_ticket(id, amount: int) -> Union[bool, User]:
     user = await user_collection.get(id)
     if user:
-        user.toxic_ticket += amount
+        user.toxic_tickets += amount
         await user.save()
         return user
     return False
 
-async def remove_bulk_toxic_ticket(id, amount: int) -> Union[bool, User]:
+async def add_mini_toxic_ticket(id) -> Union[bool, User]:
     user = await user_collection.get(id)
     if user:
-        user.toxic_ticket -= amount
+        user.mini_toxic_tickets += 1
+        await user.save()
+        return user
+    return False
+
+async def add_pma_sticker(id) -> Union[bool, User]:
+    user = await user_collection.get(id)
+    if user:
+        user.pma_stickers += 1
         await user.save()
         return user
     return False

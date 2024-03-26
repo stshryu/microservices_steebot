@@ -7,7 +7,9 @@ class User(Document):
     username: str
     email: EmailStr
     discord_id: str
+    mini_toxic_tickets: int
     toxic_tickets: int
+    pma_stickers: int
 
     class Config:
         json_schema_extra = {
@@ -15,7 +17,9 @@ class User(Document):
                 "username": "JorgeEl",
                 "email": "test@gmail.com",
                 "discord_id": "abc123test",
-                "toxic_tickets": 9128
+                "mini_toxic_tickets": 1,
+                "toxic_tickets": 9128,
+                "pma_stickers": 2,
             }
         }
 

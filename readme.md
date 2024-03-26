@@ -8,7 +8,11 @@ Run `docker-compose up --build` and the project will spin up the required servic
 
 Currently, the build only creates a persistent store and redis server. If you want to create the full stack application use the profile flag 
 
-`docker-compose --profile frontend --profile toxicticket up`
+`docker-compose --profile dev up`
+
+You can check the `docker-compose.yml` file to see all the profile tags, you can chain the profile flag calls to selectively call up certain containers. 
+
+Keep in mind that mongodb and redis are spun up no matter what, those are core services that need to be running for any container to successfully run.
 
 ## Project Layout
 
