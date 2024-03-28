@@ -5,6 +5,8 @@ from routes.user import router as UserRouter
 
 app = FastAPI()
 
+token_listener = lambda: {}
+
 @app.on_event("startup")
 async def start_database():
     await initiate_database()
