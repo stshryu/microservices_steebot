@@ -1,12 +1,13 @@
 from fastapi import FastAPI, Depends
+from contextlib import asynccontextmanager
 import redis
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
 
-@app.on_event("startup")
-async def start_database():
-    pass
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/", tags=["Root"])
 async def read_root():
-    return { "message": "Hello World" }
+    return { "message": "Hello Discord Server" }
