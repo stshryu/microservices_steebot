@@ -22,6 +22,20 @@ Keep in mind that mongodb and redis are spun up no matter what, those are core s
 
 `discord_wrapper/` contains the `discordwrapper` compose service profile. This is the main wrapper that translates commands from Discord and creates events/jobs in the relevant redis queues to be picked up by the various microservices.
 
+## Testing
+
+Running the tests for each individual service is simple.
+
+The tests are contained in the `{root}/tests` folder, which means toxic ticket and discord wrapper will have their tests located in `toxic_ticket/tests` and `discord_wrapper/tests` respectively.
+
+Once the container is running (either as a daemon, on the dashboard or in the terminal) run the following command:
+
+`docker-compose exec {container_name} python3 -m pytest tests`
+
+This will execute `pytest` for the specified container.
+
+Compose aliases and full project testing TBA.
+
 ## Caveats
 
 Keep in mind that currently we're using a **single** MongoDB instance and using discrete collections from it. While I've made sure that there is no overlap, or crossover between our microservices and their respective collections they access, for production you would want to split separate MongoDB instances for each service.
