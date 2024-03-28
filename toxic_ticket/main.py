@@ -1,15 +1,17 @@
 from fastapi import FastAPI, Depends
+from contextlib import asynccontextmanager
 from config.config import initiate_database
 from routes.admin import router as AdminRouter
 from routes.user import router as UserRouter 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await initiate_database()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 token_listener = lambda: {}
-
-@app.on_event("startup")
-async def start_database():
-    await initiate_database()
 
 @app.get("/", tags=["Root"])
 async def read_root():
