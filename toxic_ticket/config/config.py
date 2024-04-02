@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
     REDIS_HOST: Optional[str] = None
     REDIS_PORT: Optional[str] = None
+    CELERY_BROKER_URL: Optional[str] = None
+    CELERY_RESULT_BACKEND: Optional[str] = None
 
     class Config:
         env_file = ".env.dev"
@@ -27,3 +29,5 @@ async def get_redis_connection():
         port=Settings().REDIS_PORT, 
         decode_responses=True
     )
+
+
