@@ -18,3 +18,4 @@ async def get_redis_connection():
         host=Settings().REDIS_HOST,
         port=Settings().REDIS_PORT,
         decode_responses=True
+    )
