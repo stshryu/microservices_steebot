@@ -9,6 +9,7 @@ from services.subscriber import *
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await initiate_database()
+    # We want to ensure our listener doesn't run on the same loop as the main thread
     asyncio.create_task(process_channel())
     yield
 

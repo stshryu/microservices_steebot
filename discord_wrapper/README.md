@@ -14,10 +14,8 @@ Currently supports these commands:
 
 ## Server Communication
 
-This server requires `toxic_ticket` to also be running in order to ingest and execute the desired commands.
+This server requires `toxic_ticket` to also be running in order to ingest and execute the desired commands. Because of the nature of the pub/sub connection between the two services if both are not running the `publish()` method will not actually output the data anywhere, and will be lost if a subscriber is not listening to the channel.
 
-If you run this server standalone, the process will still continue like normal and will output results to the redis queue, but the executed commands will not trigger until `toxic_ticket` is run, and ingests the jobs in the queue, assuming the redis server stays alive through all this, or the jobs are cached.
-
-Keep in mind, our services use redis to communicate with each other. This means that from the `discord_wrapper` server we need to publish to a channel that the `toxic_ticket` server can subscribe to.
+Keep in mind our services use redis to communicate with each other. This means that from the `discord_wrapper` server we need to publish to a channel that the `toxic_ticket` server can subscribe to.
 
 We use a variable called `TOXIC_TICKET_CHANNEL={channel_id}` in our `.env.dev` within both servers. This will be used to initialize our pub/sub channel to allow connection between the two servers. 
