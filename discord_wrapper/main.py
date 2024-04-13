@@ -15,4 +15,5 @@ async def read_root():
 
 @app.get("/test", tags=["Test"])
 async def test():
-    await add_ticket_to_user("test", {})
+    test = { "username": "test", "ticket_type": "toxic_ticket", "amount": 10, "issuer": "test2", "ctx": { "thing": "thing" } }
+    await add_ticket_to_user(test)

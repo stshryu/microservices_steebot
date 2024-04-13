@@ -12,6 +12,14 @@ await client.set(i, "hello")
 print(f"Redis key: {await client.get(1)}")
 await client.close()
     ...
+
+Example redis pubsub template:
+    ...
+client = await get_redis_connection()
+channel = client.pubsub()
+await channel.subscribe({channel_id})
+return channel
+    ...
 """
 
 async def get_admin() -> bool:

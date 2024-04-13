@@ -14,6 +14,10 @@ You can check the `docker-compose.yml` file to see all the profile tags, you can
 
 Keep in mind that mongodb and redis are spun up no matter what, those are core services that need to be running for any container to successfully run.
 
+A sample `.env` file is shown in the root of the project called `.env.sample`. It holds all the keys we expect to see in the `.env.dev` or `.env.prod` files that the individual services will require to run.
+
+For example, each `toxic_ticket/` and `discord_wrapper/` should each have their own respective `.env..dev` files.
+
 ## Project Layout
 
 `client/` contains the frontend built in React.

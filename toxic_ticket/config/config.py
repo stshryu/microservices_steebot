@@ -1,5 +1,4 @@
 from typing import Optional
-
 from beanie import init_beanie
 import redis.asyncio as redis
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -12,6 +11,7 @@ class Settings(BaseSettings):
     REDIS_PORT: Optional[str] = None
     CELERY_BROKER_URL: Optional[str] = None
     CELERY_RESULT_BACKEND: Optional[str] = None
+    TOXIC_TICKET_CHANNEL: Optional[str] = None
 
     class Config:
         env_file = ".env.dev"

@@ -1,29 +1,31 @@
 from fastapi import Depends
 from typing import Annotated, Dict, get_type_hints, Type
-from config.config import get_redis_connection
+from config.config import get_redis_connection, Settings
 import json
 import errors
 import success
 
 
 class ToxicTicket:
-    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str):
+    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, ctx: dict):
         self.username = username
         self.ticket_type = ticket_type
         self.amount = amount
         self.issuer = issuer
+        self.ctx = ctx
 
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
 
-async def add_ticket_to_user(ticket_data: dict): 
+async def add_ticket_to_user(ticket_data: dict):
     result = await validate_ticket_data(ticket_data)
-    return None
+    return await push_event_to_queue(result.unpack())
 
 async def push_event_to_queue(ticket_data: Type[ToxicTicket]):
     client = await get_redis_connection()
-    # TODO finish event push
+    await client.publish(Settings().TOXIC_TICKET_CHANNEL, ticket_data.toJson())
+    return success.Success({}) 
 
 async def validate_ticket_data(ticket_data: dict):
     """
@@ -53,14 +55,4 @@ async def validate_ticket_data(ticket_data: dict):
          for val in invalid_attributes}
     )
 
-    return errors.InvalidDataInput(invalid_fields) if invalid_fields else success.Success(valid_attributes)
-
-class ToxicTicket:
-    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str):
-        self.username = username
-        self.ticket_type = ticket_type
-        self.amount = amount
-        self.issuer = issuer
-
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+    return errors.InvalidDataInput(invalid_fields) if invalid_fields else success.Success(ToxicTicket(**valid_attributes))

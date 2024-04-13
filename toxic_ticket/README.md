@@ -13,3 +13,7 @@ Contains methods for a `user` object that stores the username, email and toxic t
 ## API 
 
 The toxic ticket API endpoint can be reached directly, if you have the proper credentials that wraps the endpoints. There's no auth on admin or user currently so its a moot point, but when it is added it should only allow interfacing through the queue.
+
+## Server Communication
+
+We need to make sure that the `.env.dev` field `TOXIC_TICKET_CHANNEL={channel_id}` matches the field in the `discord_wrapper` server to allow us to subscribe to the correct channel to pull events from.
