@@ -1,39 +1,61 @@
 from fastapi import Depends
-from typing import Annotated, Dict, get_type_hints
+from typing import Annotated, Dict, get_type_hints, Type
 from config.config import get_redis_connection
 import json
 import errors
 import success
 
-# Consider switching Any to an actually defined data type (for sending toxic ticket data)
-async def add_ticket_to_user(username: str, ticket_data: Dict[str, str]): 
-    test = {"username": "gavin", "ticket_type": "test", "amount": "test amount", "issuer": "test"}
-    res = await validate_ticket_data(test)
+
+class ToxicTicket:
+    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str):
+        self.username = username
+        self.ticket_type = ticket_type
+        self.amount = amount
+        self.issuer = issuer
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+
+async def add_ticket_to_user(ticket_data: dict): 
+    result = await validate_ticket_data(ticket_data)
     return None
 
-async def validate_ticket_data(ticket_data: Dict[str, str]):
+async def push_event_to_queue(ticket_data: Type[ToxicTicket]):
+    client = await get_redis_connection()
+    # TODO finish event push
+
+async def validate_ticket_data(ticket_data: dict):
     """
     Takes in ticket data and returns a valid ToxicTicket class if valid.
 
     Parameter:
-        ticket_data: Any
+        valid_attributes: dict 
 
     Returns:
-        Object<ToxicTicket>
+        Success(Object<ToxicTicket>)
     """
     hints = get_type_hints(ToxicTicket.__init__)
-    ## TODO Finish method
-    valid_object = { key: value for key, value in ticket_data.items() if key in valid_attributes }
-    return None
+    valid_attributes = { key: value for key, value in ticket_data.items() }
 
-class ToxicTicket:
-    __fieldvalidation__ = [
-        "username",
-        "ticket_type",
-        "amount",
-        "issuer"
+    # Find missing attributes
+    missing_attributes = set(hints.keys()) - set(valid_attributes.keys())
+    # Find invalid attributes
+    invalid_attributes = [
+        param for param in valid_attributes.keys() \
+        if not isinstance(valid_attributes.get(param, False), hints[param])
     ]
 
+    # Construct error if present
+    invalid_fields = { val: f"{val} field is missing" for val in missing_attributes }
+    invalid_fields.update(
+        { val: f"{val} field type is incorrect. Expected type {hints[val].__name__}" \
+         for val in invalid_attributes}
+    )
+
+    return errors.InvalidDataInput(invalid_fields) if invalid_fields else success.Success(valid_attributes)
+
+class ToxicTicket:
     def __init__(self, username: str, ticket_type: str, amount: int, issuer: str):
         self.username = username
         self.ticket_type = ticket_type
