@@ -7,6 +7,9 @@ import success
 
 
 class ToxicTicket:
+    """
+    Mirrors the class schema we define in the toxic_ticket microservce.
+    """
     def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, ctx: dict):
         self.username = username
         self.ticket_type = ticket_type

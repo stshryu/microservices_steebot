@@ -28,6 +28,10 @@ async def get_user(id: PydanticObjectId) -> User:
     user = await user_collection.get(id)
     return user if user else False 
 
+async def get_user_by_name(username: str) -> User:
+    user = await User.find_one(User.username == username)
+    return user if user else False
+
 async def delete_user(id: PydanticObjectId) -> bool:
     user = await user_collection.get(id)
     if user:
