@@ -36,6 +36,7 @@ async def process_message(message):
         match task.ticket_type:
             case 'toxic_ticket':
                 updated_user = await add_toxic_ticket_service(user.id, task.amount, admin)
+                # TODO finish the post-add logic to ping the discord server with a successfull respone (using the context provided by ctx)
             case 'mini_tt':
                 updated_user = await add_mini_toxic_ticket_service(user.id, task.amount, admin)
             case 'pma_sticker':
