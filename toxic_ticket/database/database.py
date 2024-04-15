@@ -62,10 +62,26 @@ async def add_mini_toxic_ticket(id) -> Union[bool, User]:
         return user
     return False
 
+async def add_bulk_mini_toxic_ticket(id, amount) -> Union[bool, User]:
+    user = await user_collection.get(id)
+    if user:
+        user.mini_toxic_tickets += amount
+        await user.save()
+        return user
+    return False
+
 async def add_pma_sticker(id) -> Union[bool, User]:
     user = await user_collection.get(id)
     if user:
         user.pma_stickers += 1
+        await user.save()
+        return user
+    return False
+
+async def add_bulk_pma_sticker(id, amount) -> Union[bool, User]:
+    user = await user_collection.get(id)
+    if user:
+        user.pma_stickers += amount
         await user.save()
         return user
     return False

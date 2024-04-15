@@ -26,7 +26,7 @@ async def get_admin() -> bool:
     return False
 
 async def get_toxic_ticket_admin(issuer: str) -> bool:
-    return await get_ttadmin(issuer)
+    return await get_tt_admin(issuer)
 
 async def get_users_service():
     users = await retrieve_users()
@@ -48,14 +48,16 @@ async def delete_user_service(id: PydanticObjectId, is_admin: Annotated[bool, De
     deleted_user = await delete_user(id) if is_admin else False
     return deleted_user
 
-async def add_toxic_ticket_service(id: PydanticObjectId, amount: int, is_ttadmin: Annotated[bool, Depends(get_toxic_ticket_admin)]):
+# Keep in mind that Depends() only works when calling from within the FastAPI context. Calling this function directly will not have the intended effect.
+# To keep the validation in place, call get_toxic_ticket_admin(issuer) -> and pass that parameter into is_ttadmin to emulate the dependency.
+async def add_toxic_ticket_service(id: PydanticObjectId, amount: int, is_ttadmin: Annotated[str, Depends(get_toxic_ticket_admin)]):
     updated_user = await add_bulk_toxic_ticket(id, amount) if is_ttadmin else False
     return updated_user
 
-async def add_mini_toxic_ticket_service(id: PydanticObjectId, is_ttadmin: Annotated[bool, Depends(get_toxic_ticket_admin)]):
-    updated_user = await add_mini_toxic_ticket(id) if is_ttadmin else False
+async def add_mini_toxic_ticket_service(id: PydanticObjectId, amount: int, is_ttadmin: Annotated[bool, Depends(get_toxic_ticket_admin)]):
+    updated_user = await add_mini_toxic_ticket(id, amount) if is_ttadmin else False
     return updated_user
 
-async def add_pma_sticker_service(id: PydanticObjectId, is_ttadmin: Annotated[bool, Depends(get_toxic_ticket_admin)]):
-    updated_user = await add_pma_sticker(id) if is_ttadmin else False
+async def add_pma_sticker_service(id: PydanticObjectId, amount: int, is_ttadmin: Annotated[bool, Depends(get_toxic_ticket_admin)]):
+    updated_user = await add_pma_sticker(id, amount) if is_ttadmin else False
     return updated_user

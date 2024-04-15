@@ -30,18 +30,17 @@ async def process_channel():
 
 async def process_message(message):
     task = ToxicTicket(**message)
-
-    # TODO Validate ttadmin flag is working and finish rest of ticket additions
+    admin = await get_toxic_ticket_admin(task.issuer)
     user = await get_user_by_name_service(task.username)
     if user:
         match task.ticket_type:
             case 'toxic_ticket':
-                updated_user = await add_toxic_ticket_service(user.id, task.amount, task.issuer)
+                updated_user = await add_toxic_ticket_service(user.id, task.amount, admin)
             case 'mini_tt':
-                pass
+                updated_user = await add_mini_toxic_ticket_service(user.id, task.amount, admin)
             case 'pma_sticker':
-                pass
+                updated_user = await add_pma_sticker_service(user.id, task.amount, admin)
             case _:
-                pass
+                return errors.UnexpectedError("Unknown ticket type recieved")
     else:
         return errors.UnexpectedError("Unable to complete task")
