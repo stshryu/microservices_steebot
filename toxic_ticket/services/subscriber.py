@@ -4,7 +4,6 @@ import json
 from config.config import get_redis_connection, Settings
 from services.utils.redis_message import RedisMessage
 from services.user import *
-from services.discordutil import *
 
 class ToxicTicket:
     """
