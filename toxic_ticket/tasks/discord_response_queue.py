@@ -7,4 +7,13 @@ import errors
 import success
 
 async def format_message(updated_user: User, action: str, amount: int, issuer: str):
-    # TODO add in the message function to build the response
+    match action:
+        case "toxic_ticket":
+            message = f"{User.username} has been given {amount} toxic tickets by {issuer}"
+        case "mini_tt":
+            message = f"{User.username} has been given {amount} mini TT's by {issuer}"
+        case "pma_sticker":
+            message = f"{User.username} has been awarded {amount} PMA stickers by {issuer}"
+        case _:
+            message = f"TT System has been updated"
+    # TODO: Send this message to the appropriate queue for the discord wrapper service

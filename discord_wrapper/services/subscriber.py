@@ -13,5 +13,4 @@ async def process_channel():
         if redis_msg.msgtype != 'subscribe': await process_message(redis_msg.data)
 
 async def process_message(message):
-    # TODO Finish processing messages from toxic ticket
-    pass
+    print(message)
