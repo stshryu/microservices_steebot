@@ -1,10 +1,14 @@
 from fastapi import FastAPI, Depends
 from contextlib import asynccontextmanager
 import redis
+import asyncio
 from tasks.toxic_ticket_queue import *
+from services.subscriber import *
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Ensure listener doesn't run on the same loop as the main thread
+    asyncio.create_task(process_channel())
     yield
 
 app = FastAPI(lifespan=lifespan)

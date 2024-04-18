@@ -4,6 +4,7 @@ import json
 from config.config import get_redis_connection, Settings
 from services.utils.redis_message import RedisMessage
 from services.user import *
+from tasks.discord_response_queue import *
 
 class ToxicTicket:
     """
@@ -36,12 +37,17 @@ async def process_message(message):
         match task.ticket_type:
             case 'toxic_ticket':
                 updated_user = await add_toxic_ticket_service(user.id, task.amount, admin)
-                # TODO finish the post-add logic to ping the discord server with a successfull response (using the context provided by ctx)
             case 'mini_tt':
                 updated_user = await add_mini_toxic_ticket_service(user.id, task.amount, admin)
             case 'pma_sticker':
                 updated_user = await add_pma_sticker_service(user.id, task.amount, admin)
             case _:
                 return errors.UnexpectedError("Unknown ticket type recieved")
+        await send_message_to_server({ 
+            'updated_user': updated_user, 
+            'action': task.ticket_type, 
+            'amount': task.amount, 
+            'issuer': task.issuer
+        })
     else:
         return errors.UnexpectedError("Unable to complete task")
