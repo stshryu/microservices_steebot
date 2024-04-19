@@ -16,7 +16,7 @@ Keep in mind that mongodb and redis are spun up no matter what, those are core s
 
 A sample `.env` file is shown in the root of the project called `.env.sample`. It holds all the keys we expect to see in the `.env.dev` or `.env.prod` files that the individual services will require to run.
 
-For example, each `toxic_ticket/` and `discord_wrapper/` should each have their own respective `.env..dev` files.
+For example, each `toxic_ticket/` and `discord_wrapper/` should each have their own respective `.env.dev` files.
 
 ## Project Layout
 
@@ -25,6 +25,14 @@ For example, each `toxic_ticket/` and `discord_wrapper/` should each have their 
 `toxic_ticket/` contains the `toxicticket` compose service profile. This is the endpoint that allows admins to assign tickets and ticket counts to users.
 
 `discord_wrapper/` contains the `discordwrapper` compose service profile. This is the main wrapper that translates commands from Discord and creates events/jobs in the relevant redis queues to be picked up by the various microservices.
+
+## Round Trip 
+
+1. Discord server registers a command with prefix `!`.
+2. `discord_wrapper` server triggers a workflow that pushes a notification to the `toxicticketchannel`.
+3. `toxic_ticket` server triggers a workflow when an event is detected that performs some action (adding tickets, mini TT's, or PMA stickers) and records that to Mongo.
+4. `toxic_ticket` server pushes a notification to the `discordwrapperchannel` that contains a message to return to the originating server.
+5. `discord_wrapper` server triggers a workflow when an event is detected that takes the message from redis and pushes it to the Discord server the message originated from.
 
 ## Testing
 
