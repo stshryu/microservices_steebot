@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     CELERY_RESULT_BACKEND: Optional[str] = None
     TOXIC_TICKET_CHANNEL: Optional[str] = None
     DISCORD_WORKER_CHANNEL: Optional[str] = None
+    DISCORD_TOKEN: Optional[str] = None
 
     class Config:
         env_file = ".env.dev"
