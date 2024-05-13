@@ -23,7 +23,7 @@ async def format_error_message(username: str, action: str, channel: str):
     response = { "channel": channel }
     match action:
         case "missing_user":
-            message = f"{username} doesn't exist, an admin needs to add the user before actions can be applied to them. Use `!adduser {username}` to add a user first."
+            message = f"<@{username}> doesn't exist as a user in the TT system yet, an admin needs to add the user before actions can be applied to them. Use `!adduser @username` to add a user first."
         case _:
             message = f"An unexpected error occured"
     response['message'] = message
@@ -33,11 +33,11 @@ async def format_message(updated_user: User, action: str, amount: int, issuer: s
     response = { "channel": channel }
     match action:
         case "toxic_ticket":
-            message = f"{User.username} has been given {amount} toxic tickets by {issuer}"
+            message = f"<@{User.username}> has been given {amount} toxic tickets by {issuer}"
         case "mini_tt":
-            message = f"{User.username} has been given {amount} mini TT's by {issuer}"
+            message = f"<@{User.username}> has been given {amount} mini TT's by {issuer}"
         case "pma_sticker":
-            message = f"{User.username} has been awarded {amount} PMA stickers by {issuer}"
+            message = f"<@{User.username}> has been awarded {amount} PMA stickers by {issuer}"
         case _:
             message = f"TT System has been updated"
     response['message'] = message

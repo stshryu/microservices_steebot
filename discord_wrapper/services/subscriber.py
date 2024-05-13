@@ -3,6 +3,7 @@ import errors
 import json
 from config.config import get_redis_connection, Settings
 from services.utils.redis_message import RedisMessage
+from services.discordMain import *
 
 async def process_channel():
     client = await get_redis_connection()
@@ -12,5 +13,5 @@ async def process_channel():
         redis_msg = RedisMessage(message)
         if redis_msg.msgtype != 'subscribe': await process_message(redis_msg.data)
 
-async def process_message(message):
-    print(message)
+async def process_message(data):
+    await send_message(data['message'], data['channel'])

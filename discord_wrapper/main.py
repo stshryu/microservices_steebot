@@ -24,3 +24,6 @@ async def read_root():
 async def test():
     test = { "username": "testuser", "ticket_type": "toxic_ticket", "amount": 10, "issuer": "test", "channel": "" }
     await add_ticket_to_user(test)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
