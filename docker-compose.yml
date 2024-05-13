@@ -38,6 +38,8 @@ services:
     depends_on:
       - mongodb
       - redis
+    stdin_open: true
+    tty: true
 
   mongodb:
     container_name: mongodb

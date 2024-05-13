@@ -10,12 +10,12 @@ class ToxicTicket:
     """
     Mirrors the class schema we use in the discord_wrapper microservice.
     """
-    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, ctx: dict):
+    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, channel: str):
         self.username = username
         self.ticket_type = ticket_type
         self.amount = amount
         self.issuer = issuer
-        self.ctx = ctx
+        self.channel = channel 
 
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
@@ -47,7 +47,14 @@ async def process_message(message):
             'updated_user': updated_user, 
             'action': task.ticket_type, 
             'amount': task.amount, 
-            'issuer': task.issuer
+            'issuer': task.issuer,
+            'channel': task.channel
+        })
+    elif not user:
+        await send_error_message_to_server({
+            'username': task.username,
+            'action': 'missing_user',
+            'channel': task.channel
         })
     else:
         return errors.UnexpectedError("Unable to complete task")

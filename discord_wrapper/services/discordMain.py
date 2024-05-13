@@ -1,8 +1,12 @@
 import time
 import os
 import discord
+import json
+from collections import namedtuple
 from discord.ext import commands
 from config.config import Settings
+from tasks.toxic_ticket_queue import *
+from services.subscriber import *
 import asyncio
 
 description = "Discord Server Wrapper"
@@ -19,9 +23,18 @@ async def on_ready():
     print("-------")
 
 @bot.command()
-async def foo(ctx, arg):
-    print(f"{arg=}")
-    await ctx.send(arg)
+async def addtt(ctx, amount: int, username: str):
+    await add_ticket_to_user({
+        "username": username,
+        "ticket_type": "toxic_ticket",
+        "amount": amount,
+        "issuer": str(ctx.author.id),
+        "channel": str(ctx.message.channel.id)
+    })
+
+async def send_message(bot, message: str, channel: str):
+    channel = bot.get_channel(int(channel))
+    await channel.send(message)
 
 async def start_bot():
     async with bot:

@@ -10,12 +10,12 @@ class ToxicTicket:
     """
     Mirrors the class schema we define in the toxic_ticket microservce.
     """
-    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, ctx: dict):
+    def __init__(self, username: str, ticket_type: str, amount: int, issuer: str, channel: str):
         self.username = username
         self.ticket_type = ticket_type
         self.amount = amount
         self.issuer = issuer
-        self.ctx = ctx
+        self.channel = channel 
 
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
@@ -26,6 +26,7 @@ async def add_ticket_to_user(ticket_data: dict):
     return await push_event_to_queue(result.unpack())
 
 async def push_event_to_queue(ticket_data: Type[ToxicTicket]):
+    print(f"{ticket_data=}")
     client = await get_redis_connection()
     await client.publish(Settings().TOXIC_TICKET_CHANNEL, ticket_data.toJson())
     return success.Success({}) 
