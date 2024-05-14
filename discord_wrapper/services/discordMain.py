@@ -6,7 +6,6 @@ from collections import namedtuple
 from discord.ext import commands
 from config.config import Settings
 from tasks.toxic_ticket_queue import *
-from services.subscriber import *
 import asyncio
 
 description = "Discord Server Wrapper"
@@ -24,7 +23,7 @@ async def on_ready():
 
 @bot.command()
 async def addtt(ctx, amount: int, username: str):
-    # discord usernames come with a <@ ... > wrapped around the string so we splice it away
+    # Discord adds a <@ ... > to the usernames, so we need to strip them off
     username = username[2:-1]
     await add_ticket_to_user({
         "username": username,

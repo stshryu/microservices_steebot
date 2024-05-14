@@ -33,11 +33,11 @@ async def format_message(updated_user: User, action: str, amount: int, issuer: s
     response = { "channel": channel }
     match action:
         case "toxic_ticket":
-            message = f"<@{User.username}> has been issued {amount} toxic tickets by {issuer}"
+            message = f"<@{updated_user.username}> has been issued {amount} toxic tickets by <@{issuer}>"
         case "mini_tt":
-            message = f"<@{User.username}> has been issued {amount} mini TT's by {issuer}"
+            message = f"<@{updated_user.username}> has been issued {amount} mini TT's by <@{issuer}>"
         case "pma_sticker":
-            message = f"<@{User.username}> has been awarded {amount} PMA stickers by {issuer}"
+            message = f"<@{updated_user.username}> has been awarded {amount} PMA stickers by <@{issuer}>"
         case _:
             message = f"TT System has been updated"
     response['message'] = message
