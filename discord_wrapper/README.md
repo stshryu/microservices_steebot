@@ -8,9 +8,9 @@ Runs on port `5000`.
 
 Currently supports these commands:
 
-1. `!tt add {user}` - Add a toxic ticket to specified user
-2. `!tt remove {user}` - Remove a toxic ticket from a specified user
-3. `!tt {user}` - Get the user and their current toxic ticket count
+1. `!addtt {amount} {user}` - Adds the specified amount of  toxic tickets to specified user
+2. `!tt {user}` - Get the user and their lifetime toxic ticket count
+3. `!tthelp` - Gets the help message for toxic tickets
 
 ## Server Communication
 
