@@ -20,15 +20,18 @@ class ToxicTicket:
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
-
 async def add_ticket_to_user(ticket_data: dict):
     result = await validate_ticket_data(ticket_data)
     return await push_event_to_queue(result.unpack())
 
-async def push_event_to_queue(ticket_data: Type[ToxicTicket]):
-    print(f"{ticket_data=}")
+async def get_user_statistics(user_data: dict):
+    return await push_event_to_queue(user_data)
+
+async def push_event_to_queue(data):
     client = await get_redis_connection()
-    await client.publish(Settings().TOXIC_TICKET_CHANNEL, ticket_data.toJson())
+    await client.publish(Settings().TOXIC_TICKET_CHANNEL, data.toJson()) \
+    if isinstance(data, ToxicTicket) else \
+    await client.publish(Settings().TOXIC_TICKET_CHANNEL, json.dumps(data))
     return success.Success({}) 
 
 async def validate_ticket_data(ticket_data: dict):

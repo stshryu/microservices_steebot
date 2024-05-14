@@ -5,6 +5,7 @@ import json
 from collections import namedtuple
 from discord.ext import commands
 from config.config import Settings
+from services.utils.discord_formatted_messages import *
 from tasks.toxic_ticket_queue import *
 import asyncio
 
@@ -23,15 +24,49 @@ async def on_ready():
 
 @bot.command()
 async def addtt(ctx, amount: int, username: str):
-    # Discord adds a <@ ... > to the usernames, so we need to strip them off
+    username = await validate_and_strip_username(username)
+    if username:
+        await add_ticket_to_user({
+            "username": username,
+            "ticket_type": "toxic_ticket",
+            "amount": amount,
+            "issuer": str(ctx.author.id),
+            "channel": str(ctx.message.channel.id)
+        })
+    else:
+        await send_message(
+            discord_formatted_messages['invalid_username'],
+            ctx.message.channel.id
+        )
+
+@bot.command()
+async def tt(ctx, username: str):
+    username = await validate_and_strip_username(username)
+    if username:
+        await get_user_statistics({
+            "retrieval": "True",
+            "username": username,
+            "channel": ctx.channel.id
+        })
+    else:
+        await send_message(
+            discord_formatted_messages['invalid_username'],
+            ctx.message.channel.id
+        )
+
+@bot.command()
+async def tthelp(ctx):
+    await send_message(
+        discord_formatted_messages['help'],
+        ctx.message.channel.id
+    )
+
+async def validate_and_strip_username(username: str):
+    # Ensure that a valid username is being passed in (soft validation, not hardened to manually wrapper values)
+    username_tag = username[:2] + username[-1]
+    # Discord wraps a <@ ... > around the username so we strip it away
     username = username[2:-1]
-    await add_ticket_to_user({
-        "username": username,
-        "ticket_type": "toxic_ticket",
-        "amount": amount,
-        "issuer": str(ctx.author.id),
-        "channel": str(ctx.message.channel.id)
-    })
+    return username if username_tag == "<@>" else False
 
 async def send_message(message: str, channel: str):
     channel = bot.get_channel(int(channel))
